@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_material">
+
+    <fragment
+        android:id="@+id/navigation_material"
+        android:name="com.example.costpricecalculator.ui.material.MaterialFragment"
+        android:label="@string/title_materials"
+        tools:layout="@layout/fragment_materials" />
+
+    <fragment
+        android:id="@+id/navigation_project"
+        android:name="com.example.costpricecalculator.ui.project.ProjectFragment"
+        android:label="@string/title_projects"
+        tools:layout="@layout/fragment_projects" />
+
+    <fragment
+        android:id="@+id/navigation_calculator"
+        android:name="com.example.costpricecalculator.ui.calculator.CalculatorFragment"
+        android:label="@string/title_calculator"
+        tools:layout="@layout/fragment_calculator" />
+
+    <fragment
+        android:id="@+id/navigation_stopwatch"
+        android:name="com.example.costpricecalculator.ui.stopwatch.StopwatchListFragment"
+        android:label="@string/title_stopwatch"
+        tools:layout="@layout/fragment_stopwatch_list" >
+        <action
+            android:id="@+id/action_createStopwatchDialog_to_stopwatchFragment"
+            app:destination="@id/stopwatchFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/createStopwatchDialog"
+        android:name="com.example.costpricecalculator.ui.stopwatch.CreateStopwatchDialog"
+        android:label="CreateStopwatchDialog" >
+    </dialog>
+    <fragment
+        android:id="@+id/stopwatchFragment"
+        android:name="com.example.costpricecalculator.ui.stopwatch.StopwatchFragment"
+        android:label="fragment_stopwatch"
+        tools:layout="@layout/fragment_stopwatch" />
+</navigation>

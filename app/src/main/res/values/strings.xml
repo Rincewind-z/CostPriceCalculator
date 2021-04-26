@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cost Price Calculator</string>
+    <string name="title_materials">Материалы</string>
+    <string name="title_projects">Проекты</string>
+    <string name="title_calculator">Калькулятор</string>
+    <string name="title_stopwatch">Секундомер</string>
+</resources>

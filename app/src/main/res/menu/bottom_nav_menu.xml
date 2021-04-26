@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_material"
+        android:icon="@drawable/ic_material_white"
+        android:title="@string/title_materials" />
+
+    <item
+        android:id="@+id/navigation_project"
+        android:icon="@drawable/ic_project_white"
+        android:title="@string/title_projects" />
+
+    <item
+        android:id="@+id/navigation_calculator"
+        android:icon="@drawable/ic_calculator_white"
+        android:title="@string/title_calculator" />
+
+    <item
+        android:id="@+id/navigation_stopwatch"
+        android:icon="@drawable/ic_stopwatch_white"
+        android:title="@string/title_stopwatch" />
+</menu>
