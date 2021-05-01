@@ -9,12 +9,12 @@ public class Stopwatch {
 
     @PrimaryKey
     @NonNull
-    int stopwatch_id;
+    int _id;
     String stopwatch_name;
     String time;
 
-    public Stopwatch (int stopwatch_id, String stopwatch_name, String time) {
-        this.stopwatch_id = stopwatch_id;
+    public Stopwatch (int _id, String stopwatch_name, String time) {
+        this._id = _id;
         this.stopwatch_name = stopwatch_name;
         this.time = time;
     }
@@ -22,7 +22,7 @@ public class Stopwatch {
     @Override
     public String toString() {
         return "Stopwatch{" +
-                "stopwatch_id=" + stopwatch_id +
+                "_id=" + _id +
                 ", stopwatch_name='" + stopwatch_name + '\'' +
                 ", time='" + time + '\'' +
                 '}';

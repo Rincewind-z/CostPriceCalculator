@@ -42,6 +42,7 @@ public class CreateStopwatchDialog extends AppCompatDialogFragment {
                         String stopwatchName = editTextStopwatchName.getText().toString();
                         Bundle bundle = new Bundle();
                         bundle.putString("name", stopwatchName);
+
                         NavController navController = NavHostFragment.findNavController(CreateStopwatchDialog.this);
                         //if (navController.getCurrentDestination().getId() == R.id.createStopwatchDialog) {
                             navController.navigate(R.id.action_createStopwatchDialog_to_stopwatchFragment, bundle);
