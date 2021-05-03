@@ -6,14 +6,21 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Stopwatch.class}, version = 2)
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Database(entities = {Stopwatch.class}, version = 5)
 public abstract class DataBase extends RoomDatabase {
-    abstract StopwatchDao stopwatchDao();
+    public abstract StopwatchDao stopwatchDao();
+
+    private static final int NUMBER_OF_THREADS = 4;
+    static public final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
 
     private static final String db_name = "cpc.db";
     private static volatile DataBase instance = null;
 
-    synchronized static DataBase get(Context context) {
+    public synchronized static DataBase get(Context context) {
         if (instance == null) {
             instance = create(context, false);
         }

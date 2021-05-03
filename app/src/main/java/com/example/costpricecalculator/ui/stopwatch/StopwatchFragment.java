@@ -1,29 +1,25 @@
 package com.example.costpricecalculator.ui.stopwatch;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import android.os.SystemClock;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.costpricecalculator.R;
+import com.example.costpricecalculator.model.DataBase;
+import com.example.costpricecalculator.model.Stopwatch;
 
 public class StopwatchFragment extends Fragment {
 
@@ -34,9 +30,14 @@ public class StopwatchFragment extends Fragment {
     private Button stop_button;
     private Button reset_button;
     private long timeWhenStopped = 0;
+    private Stopwatch stopwatch;
+    private DataBase dataBase;
 
-    public static StopwatchFragment newInstance() {
-        return new StopwatchFragment();
+    private String timeToString(long time){
+        int h = (int)(time /3600000);
+        int m = (int)(time - h*3600000)/60000;
+        int s = (int)(time - h*3600000- m*60000)/1000 ;
+        return (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
     }
 
     @Override
@@ -54,16 +55,17 @@ public class StopwatchFragment extends Fragment {
         mChronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             public void onChronometerTick(Chronometer cArg) {
                 long time = SystemClock.elapsedRealtime() - cArg.getBase();
-                int h   = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s= (int)(time - h*3600000- m*60000)/1000 ;
-                String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
-                cArg.setText(t);
+                cArg.setText(timeToString(time));
             }
         });
 
-        mChronometer.setBase(SystemClock.elapsedRealtime());
-        mChronometer.setText("00:00:00");
+        stopwatch = (Stopwatch) getArguments().getSerializable("stopwatch");
+
+        timeWhenStopped =  - stopwatch.getTime();
+        textViewName.setText(stopwatch.getStopwatch_name());
+
+        //mChronometer.setBase(SystemClock.elapsedRealtime() - timeWhenStopped);
+        mChronometer.setText(timeToString(-timeWhenStopped));
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Секундомер");
         return view;
@@ -73,7 +75,9 @@ public class StopwatchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(StopwatchViewModel.class);
-        textViewName.setText(getArguments().getString("name"));
+
+
+        dataBase = DataBase.get(getContext());
 
         start_button.setOnClickListener(v -> onStartClick(v));
 
@@ -90,13 +94,24 @@ public class StopwatchFragment extends Fragment {
         start_button.setEnabled(false);
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void onStopClick(View view) {
-        timeWhenStopped = mChronometer.getBase() - SystemClock.elapsedRealtime();
+        timeWhenStopped = SystemClock.elapsedRealtime() - mChronometer.getBase();
         mChronometer.stop();
 
         start_button.setEnabled(true);
+
+        new AsyncTask<Void, Void, Stopwatch>() {
+            @Override
+            protected Stopwatch doInBackground(Void... stopwatches) {
+                stopwatch.setTime(timeWhenStopped);
+                dataBase.stopwatchDao().update(stopwatch);
+                return null;
+            }
+        }.execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void onResetClick(View view) {
         mChronometer.setBase(SystemClock.elapsedRealtime());
         timeWhenStopped = 0;
@@ -104,5 +119,14 @@ public class StopwatchFragment extends Fragment {
         mChronometer.setText("00:00:00");
 
         start_button.setEnabled(true);
+
+        new AsyncTask<Void, Void, Stopwatch>() {
+            @Override
+            protected Stopwatch doInBackground(Void... stopwatches) {
+                stopwatch.setTime(timeWhenStopped);
+                dataBase.stopwatchDao().update(stopwatch);
+                return null;
+            }
+        }.execute();
     }
 }
